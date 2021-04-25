@@ -3,7 +3,7 @@ const opts = {
     useNewUrlParser: true,
     useUnifiedTopology: true 
 }
-mongoose.connect('mongodb://127.0.0.1:27017/mobile-store', opts);
+mongoose.connect('mongodb+srv://kietlna1997:Redagon291@cluster0.1bcuc.mongodb.net/test', opts);
 
 mongoose.connection.once('open', function () {
     console.log('connect success!')
