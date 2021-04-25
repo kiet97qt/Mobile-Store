@@ -9,13 +9,13 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "localhost:3000"
+host: "mobile-store-000.herokuapp.com"
 tags:
 - name: "admin"
   description: "Admins API"
   externalDocs:
     description: "Find out more"
-    url: "http://http://localhost:3000"
+    url: "mobile-store-000.herokuapp.com"
 schemes:
 - "https"
 - "http"
