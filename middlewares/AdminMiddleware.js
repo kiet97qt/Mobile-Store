@@ -33,11 +33,11 @@ async function orderComfirmedByAdmin(req,res) {
 }
 
 async function getOrder(req,res) {
-  let orders = await MidOrder.getOrderByConditions(req.body);
+  let orders = await MidOrder.getOrderByConditions(req.query);
   if(Array.isArray(orders) && orders.length){
       return orders
   } 
-  switch(req.body.status){
+  switch(parseInt(req.query.status)){
       case 1:
           return "Basket isn't exist!";
       case 2:

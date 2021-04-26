@@ -51,6 +51,7 @@ async function modify(data) {
       name: data.body.name,
       brand: data.body.brand,
       discount: data.body.discount,
+      cost: data.body.cost,
       description: data.body.description,
     }
     await products.findOneAndUpdate({ _id: data.query.id }, bodyProductFields, {

@@ -9,81 +9,221 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "mobile-store-000.herokuapp.com"
+host: "localhost:3000"
+# host: "mobile-store-000.herokuapp.com"
+   
 tags:
 - name: "admin"
   description: "Admins API"
   externalDocs:
     description: "Find out more"
-    url: "mobile-store-000.herokuapp.com"
+    url: "http://localhost:3000"
+- name: "customer"
+  description: "Customers API"
+  externalDocs:
+    description: "Find out more"
+    url: "http://localhost:3000"
+
+    # url: "https://mobile-store-000.herokuapp.com"
 schemes:
 - "https"
 - "http"
-components:
-  securitySchemes:
-    bearerAuth:            
-      type: http
-      scheme: bearer
-      bearerFormat: JWT 
+definitions:
+  Order:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      petId:
+        type: "integer"
+        format: "int64"
+      quantity:
+        type: "integer"
+        format: "int32"
+      shipDate:
+        type: "string"
+        format: "date-time"
+      status:
+        type: "string"
+        description: "Order Status"
+        enum:
+        - "placed"
+        - "approved"
+        - "delivered"
+      complete:
+        type: "boolean"
+        default: false
+    xml:
+      name: "Order"
+  Category:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+    xml:
+      name: "Category"
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      username:
+        type: "string"
+      firstName:
+        type: "string"
+      lastName:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+      phone:
+        type: "string"
+      userStatus:
+        type: "integer"
+        format: "int32"
+        description: "User Status"
+    xml:
+      name: "User"
+  Tag:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+    xml:
+      name: "Tag"
+  Pet:
+    type: "object"
+    required:
+    - "name"
+    - "photoUrls"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      category:
+        $ref: "#/definitions/Category"
+      name:
+        type: "string"
+        example: "doggie"
+      photoUrls:
+        type: "array"
+        xml:
+          name: "photoUrl"
+          wrapped: true
+        items:
+          type: "string"
+      tags:
+        type: "array"
+        xml:
+          name: "tag"
+          wrapped: true
+        items:
+          $ref: "#/definitions/Tag"
+      status:
+        type: "string"
+        description: "pet status in the store"
+        enum:
+        - "available"
+        - "pending"
+        - "sold"
+    xml:
+      name: "Pet"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+  Acount: 
+    type: "object"
+    properties:
+      email:
+        type: "string"
+        example: "admin@gmail.com"
+      password:
+        type: "string"
+        example: "admin"
+    xml:
+      name: "Acount"
+  Statuses:
+    type: number
+    enum: &STATUSES
+      - 1
+      - 2
+      - 3
+  Configuration:
+    type: "object"
+    properties:
+      body:
+        type: "object"
+        properties:
+          dimensions: 
+            type: "string"
+            example: "200 x 71.5 x 7.4 mm (5.78 x 2.81 x 0.29 in)"
+          weight:
+            type: "string"
+            example: "155 g (5.78 oz)"
+      display:
+        type: "object"
+        properties:
+          type: 
+            type: "string"
+            example: "Super Retina XDR OLED, HDR10, Dolby Vision, 123123 nits (typ)"
+          size:
+            type: "string"
+            example: "6.1 inches, 90.2 cm2 (~86.0% screen-to-body ratio)"
+      sound:
+        type: "string"
+        example: "4 output"        
+      flatform:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            os: 
+              type: "string"
+              example: "iOS 14.2, upgradable to iOS 14.4.2"
+            chipset: 
+              type: "string"
+              example: "Apple A17 Bionic (5 nm)"
+  Product:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        example: "Xiaomi Redmi Note 10"
+      brand:
+        type: "string"
+        example: "Xiaomi"
+      discount: 
+        type: "string"
+        example: "Tặng: Cường lực - Ốp lưng - Tai nghe khi mua BHV"
+      configuration:
+        type: "array"
+        xml:
+          name: "tag"
+          wrapped: true
+        $ref: "#/definitions/Configuration"
+      description:
+        type: "string"
+        example: "description..."      
+      cost:
+        type: "number"
+        example: 5000000              
 paths:
-  /admin/order/confirm:
-    post:
-      tags:
-      - "admin"
-      summary: "Admin gets orders"
-      description: ""
-      operationId: "adminConfirm"
-      consumes:
-      - "application/json"
-      - "application/xml"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - name: authorization
-        in: header
-        type: string
-        required: true
-      - in: "body"
-        name: "id"
-        description: "Pet object that needs to be added to the store"
-        required: true
-        # schema:
-        #   $ref: "#/definitions/Admin"
-
-      responses:
-        "405":
-          description: "Invalid input"
-      security:
-        - bearerAuth: []
-  /admin/order:
-    get:
-      tags:
-      - "admin"
-      summary: "Admin gets orders"
-      description: ""
-      operationId: "adminGetOrders"
-      consumes:
-      - "application/json"
-      - "application/xml"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "info"
-        description: "Pet object that needs to be added to the store"
-        required: true
-        schema:
-          $ref: "#/definitions/Admin"
-      responses:
-        "405":
-          description: "Invalid input"
-      security:
-      # - petstore_auth:
-      #   - "write:pets"
-      #   - "read:pets"
-        - bearerAuth: []
   /admin/login:
     post:
       tags:
@@ -100,24 +240,49 @@ paths:
       parameters:
       - in: "body"
         name: "account"
-        description: "Pet object that needs to be added to the store"
+        description: "Admin account"
         required: true
         schema:
-          $ref: "#/definitions/Admin"
+          $ref: "#/definitions/Acount"
+      responses:
+        "405":
+          description: "Invalid input"
+  /admin/order:
+    get:
+      tags:
+      - "admin"
+      summary: "Admin gets orders"
+      description: ""
+      operationId: "adminGetOrders"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "status"
+        enum: *STATUSES
+        description: "Status of orders which you want to get"
+      - in: "query"
+        name: "userID"
+        description: "The ID of users who you want to get orders"
+      - in: "query"
+        name: "_id"
+        description: "The ID of order"
       responses:
         "405":
           description: "Invalid input"
       security:
-      # - petstore_auth:
-      #   - "write:pets"
-      #   - "read:pets"
-        - Bearer: []
-    put:
+      - adminToken: []          
+  /admin/order/confirm:
+    post:
       tags:
-      - "pet"
-      summary: "Update an existing pet"
+      - "admin"
+      summary: "Admin confirm order"
       description: ""
-      operationId: "updatePet"
+      operationId: "adminConfirm"
       consumes:
       - "application/json"
       - "application/xml"
@@ -126,22 +291,171 @@ paths:
       - "application/json"
       parameters:
       - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
+        name: "id"
+        description: "Administrator confirms order after order confirmed by customer"
         required: true
         schema:
-          $ref: "#/definitions/Pet"
+          type: "object"
+          properties:
+            _id:
+              type: "string"
+              example: "6086d6d4a7461125a8fe6ae9"
       responses:
-        "400":
-          description: "Invalid ID supplied"
-        "404":
-          description: "Pet not found"
         "405":
-          description: "Validation exception"
+          description: "Invalid input"
       security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
+      - adminToken: []
+  /admin/product:
+    post:
+      tags:
+      - "admin"
+      summary: "Admin creates new product"
+      description: ""
+      operationId: "adminCreateProduct"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "product informations"
+        description: "Administrator creates new product"
+        required: true
+        schema:
+          $ref: "#/definitions/Product"        
+      responses:
+        "405":
+          description: "Invalid input"
+      security:
+      - adminToken: []        
+    put:
+      tags:
+      - "admin"
+      summary: "Admin modifies product informations"
+      description: ""
+      operationId: "adminModifyProduct"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "id"
+        description: "The ID of product which you want to modify"        
+      - in: "body"
+        name: "product informations"
+        description: "Administrator creates new product"
+        required: true
+        schema:
+          $ref: "#/definitions/Product"        
+      responses:
+        "405":
+          description: "Invalid input"
+      security:
+      - adminToken: []       
+    delete:
+      tags:
+      - "admin"
+      summary: "Admin deletes product"
+      description: ""
+      operationId: "adminDeleteProduct"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "id"
+        description: "The ID of product which you want to delete"        
+      responses:
+        "405":
+          description: "Invalid input"
+      security:
+      - adminToken: []       
+    patch:
+      tags:
+      - "admin"
+      summary: "Admin restores product"
+      description: ""
+      operationId: "adminRestoreProduct"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "id"
+        description: "The ID of product which you want to restore"        
+      responses:
+        "405":
+          description: "Invalid input"
+      security:
+      - adminToken: []  
+  /admin/product/force:
+    delete:
+      tags:
+      - "admin"
+      summary: "Admin deletes product permanently"
+      description: ""
+      operationId: "adminDeleteProductPermanently"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "id"
+        description: "The ID of product which you want to delete permanently"        
+      responses:
+        "405":
+          description: "Invalid input"
+      security:
+      - adminToken: []                      
+  /customer/login:
+    post:
+      tags:
+      - "customer"
+      summary: "Customer login"
+      description: ""
+      operationId: "customerLogin"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "account"
+        description: "Customer Login"
+        required: true
+        schema:
+          $ref: "#/definitions/Acount"
+      responses:
+        "405":
+          description: "Invalid input"
+  /customer/profile:
+    get:
+      tags:
+      - "customer"
+      summary: "Customer get profile"
+      description: ""
+      operationId: "customerGetProfile"
+      responses:
+        "405":
+          description: "Invalid input" 
+      security:
+      - customerToken: []
   /pet/findByStatus:
     get:
       tags:
@@ -622,144 +936,14 @@ paths:
         "404":
           description: "User not found"
 securityDefinitions:
-  api_key:
-    type: "apiKey"
-    name: "api_key"
-    in: "header" 
-  bearerAuth:            
-    type: http
-    scheme: bearer
-    bearerFormat: JWT 
-definitions:
-  Order:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      petId:
-        type: "integer"
-        format: "int64"
-      quantity:
-        type: "integer"
-        format: "int32"
-      shipDate:
-        type: "string"
-        format: "date-time"
-      status:
-        type: "string"
-        description: "Order Status"
-        enum:
-        - "placed"
-        - "approved"
-        - "delivered"
-      complete:
-        type: "boolean"
-        default: false
-    xml:
-      name: "Order"
-  Category:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Category"
-  User:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      username:
-        type: "string"
-      firstName:
-        type: "string"
-      lastName:
-        type: "string"
-      email:
-        type: "string"
-      password:
-        type: "string"
-      phone:
-        type: "string"
-      userStatus:
-        type: "integer"
-        format: "int32"
-        description: "User Status"
-    xml:
-      name: "User"
-  Tag:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Tag"
-  Pet:
-    type: "object"
-    required:
-    - "name"
-    - "photoUrls"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      category:
-        $ref: "#/definitions/Category"
-      name:
-        type: "string"
-        example: "doggie"
-      photoUrls:
-        type: "array"
-        xml:
-          name: "photoUrl"
-          wrapped: true
-        items:
-          type: "string"
-      tags:
-        type: "array"
-        xml:
-          name: "tag"
-          wrapped: true
-        items:
-          $ref: "#/definitions/Tag"
-      status:
-        type: "string"
-        description: "pet status in the store"
-        enum:
-        - "available"
-        - "pending"
-        - "sold"
-    xml:
-      name: "Pet"
-  ApiResponse:
-    type: "object"
-    properties:
-      code:
-        type: "integer"
-        format: "int32"
-      type:
-        type: "string"
-      message:
-        type: "string"
-  Admin: 
-    type: "object"
-    properties:
-      email:
-        type: "string"
-        example: "admin@gmail.com"
-      password:
-        type: "string"
-        example: "admin"
-    xml:
-      name: "Admin"
+  adminToken:
+    type: apiKey
+    name: Authorization
+    in: header
+  customerToken:
+    type: apiKey
+    name: Authorization
+    in: header
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"
