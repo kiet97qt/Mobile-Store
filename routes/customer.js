@@ -10,11 +10,9 @@ router.post("/login", AuthController.login);
 
 router.post("/register", AuthController.register);
 
-router.post("/forgotPassword", AuthController.forgotPassword);
-
 router.get("/profile", isCustomerAuth, CustomerController.getProfile);
 
-router.post("/sendMail", AdminController.sendMailForgotPassword);
+router.post("/forgotPassword", AdminController.sendMailForgotPassword);
 
 router.patch("/changeForgotPassword", CustomerController.changeForgotPassword);
 
@@ -22,13 +20,13 @@ router.post("/order",isCustomerAuth, CustomerController.createOrder);
 
 router.get("/order",isCustomerAuth, CustomerController.getOrder);
 
-router.post("/order/addProducts",isCustomerAuth, CustomerController.addProducts);
+router.post("/order/products",isCustomerAuth, CustomerController.addProducts);
 
 router.put("/order",isCustomerAuth, CustomerController.updateBasket);
 
 router.patch("/order",isCustomerAuth, CustomerController.orderComfirmedByCustomer);
 
-router.delete("/order",isCustomerAuth, CustomerController.deleteProducts);
+router.delete("/order/products",isCustomerAuth, CustomerController.deleteProducts);
 
 
 router.post("/testCode", testCode);

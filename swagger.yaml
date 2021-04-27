@@ -15,154 +15,72 @@ host: "mobile-store-000.herokuapp.com"
 tags:
 - name: "admin"
   description: "Admins API"
-  externalDocs:
-    description: "Find out more"
-    url: "http://localhost:3000"
 - name: "customer"
   description: "Customers API"
-  externalDocs:
-    description: "Find out more"
-    url: "http://localhost:3000"
-    # url: "https://mobile-store-000.herokuapp.com"
+- name: "product"
+  description: "Products API"
 schemes:
 - "https"
 - "http"
 definitions:
-  Order:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      petId:
-        type: "integer"
-        format: "int64"
-      quantity:
-        type: "integer"
-        format: "int32"
-      shipDate:
-        type: "string"
-        format: "date-time"
-      status:
-        type: "string"
-        description: "Order Status"
-        enum:
-        - "placed"
-        - "approved"
-        - "delivered"
-      complete:
-        type: "boolean"
-        default: false
-    xml:
-      name: "Order"
-  Category:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Category"
-  User:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      username:
-        type: "string"
-      firstName:
-        type: "string"
-      lastName:
-        type: "string"
-      email:
-        type: "string"
-      password:
-        type: "string"
-      phone:
-        type: "string"
-      userStatus:
-        type: "integer"
-        format: "int32"
-        description: "User Status"
-    xml:
-      name: "User"
-  Tag:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Tag"
-  Pet:
-    type: "object"
-    required:
-    - "name"
-    - "photoUrls"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      category:
-        $ref: "#/definitions/Category"
-      name:
-        type: "string"
-        example: "doggie"
-      photoUrls:
-        type: "array"
-        xml:
-          name: "photoUrl"
-          wrapped: true
-        items:
-          type: "string"
-      tags:
-        type: "array"
-        xml:
-          name: "tag"
-          wrapped: true
-        items:
-          $ref: "#/definitions/Tag"
-      status:
-        type: "string"
-        description: "pet status in the store"
-        enum:
-        - "available"
-        - "pending"
-        - "sold"
-    xml:
-      name: "Pet"
-  ApiResponse:
-    type: "object"
-    properties:
-      code:
-        type: "integer"
-        format: "int32"
-      type:
-        type: "string"
-      message:
-        type: "string"
   Acount: 
     type: "object"
     properties:
       email:
         type: "string"
-        example: "admin@gmail.com"
+        example: "EmailAddress@gmail.com"
       password:
         type: "string"
-        example: "admin"
+        example: "EmailPassword"
     xml:
       name: "Acount"
+  CustomerInfo: 
+    type: "object"
+    properties:
+      email:
+        type: "string"
+        example: "EmailAddress@gmail.com"
+      password:
+        type: "string"
+        example: "EmailPassword"
+      phone:
+        type: "string"
+        example: "PhoneNumber"
+    xml:
+      name: "CustomerInfo"    
+  OrderInfo:
+    type: "object"
+    properties:
+      nameSender:
+        type: "string"
+        example: "Name"
+      mailSender:
+        type: "string"
+        example: "EmailAddress@gmail.com"
+      addressSender:
+        type: "string"
+        example: "Address"
+      phoneNumberSender:
+        type: "string"
+        example: "PhoneNumber"
+      nameReceiver:
+        type: "string"
+        example: "Name"
+      addressReceiver:
+        type: "string"
+        example: "Address"
+      phoneNumberReceiver:
+        type: "string"
+        example: "PhoneNumber"
+    xml:
+      name: "OrderInfo"        
   Statuses:
     type: number
     enum: &STATUSES
       - 1
       - 2
       - 3
+      - 99
   Configuration:
     type: "object"
     properties:
@@ -221,7 +139,66 @@ definitions:
         example: "description..."      
       cost:
         type: "number"
-        example: 5000000              
+        example: 5000000     
+  ProductsAdded:
+    type: "object"
+    properties:
+      products:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            productID: 
+              type: "string"
+              example: "productID"
+            quantity: 
+              type: "number"
+              example: "XXX"       
+  ProductsDeleted:
+    type: "object"
+    properties:
+      _id:
+        type: "array"
+        items:
+          type: "string"
+          example: "IdProducts.."   
+  UpdatedInfo:
+    type: "object"
+    properties:
+      nameSender:
+        type: "string"
+        example: "Name"
+      mailSender:
+        type: "string"
+        example: "EmailAddress@gmail.com"
+      addressSender:
+        type: "string"
+        example: "Address"
+      phoneNumberSender:
+        type: "string"
+        example: "PhoneNumber"
+      nameReceiver:
+        type: "string"
+        example: "Name"
+      addressReceiver:
+        type: "string"
+        example: "Address"
+      phoneNumberReceiver:
+        type: "string"
+        example: "PhoneNumber"
+      products:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            productID: 
+              type: "string"
+              example: "productID"
+            quantity: 
+              type: "number"
+              example: "XXX"               
+    xml:
+      name: "OrderInfo"         
 paths:
   /admin/login:
     post:
@@ -443,6 +420,29 @@ paths:
       responses:
         "405":
           description: "Invalid input"
+  /customer/register:
+    post:
+      tags:
+      - "customer"
+      summary: "Customer register"
+      description: ""
+      operationId: "customerRegister"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "customerInfo"
+        description: "Customer Register"
+        required: true
+        schema:
+          $ref: "#/definitions/CustomerInfo"
+      responses:
+        "405":
+          description: "Invalid input"
   /customer/profile:
     get:
       tags:
@@ -455,485 +455,220 @@ paths:
           description: "Invalid input" 
       security:
       - customerToken: []
-  /pet/findByStatus:
-    get:
-      tags:
-      - "pet"
-      summary: "Finds Pets by status"
-      description: "Multiple status values can be provided with comma separated strings"
-      operationId: "findPetsByStatus"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - name: "status"
-        in: "query"
-        description: "Status values that need to be considered for filter"
-        required: true
-        type: "array"
-        items:
-          type: "string"
-          enum:
-          - "available"
-          - "pending"
-          - "sold"
-          default: "available"
-        collectionFormat: "multi"
-      responses:
-        "200":
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Pet"
-        "400":
-          description: "Invalid status value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet/findByTags:
-    get:
-      tags:
-      - "pet"
-      summary: "Finds Pets by tags"
-      description: "Muliple tags can be provided with comma separated strings. Use         tag1, tag2, tag3 for testing."
-      operationId: "findPetsByTags"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - name: "tags"
-        in: "query"
-        description: "Tags to filter by"
-        required: true
-        type: "array"
-        items:
-          type: "string"
-        collectionFormat: "multi"
-      responses:
-        "200":
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Pet"
-        "400":
-          description: "Invalid tag value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-      deprecated: true
-  /pet/{petId}:
-    get:
-      tags:
-      - "pet"
-      summary: "Find pet by ID"
-      description: "Returns a single pet"
-      operationId: "getPetById"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet to return"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        "200":
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Pet"
-        "400":
-          description: "Invalid ID supplied"
-        "404":
-          description: "Pet not found"
-      security:
-      - api_key: []
+  /customer/forgotPassword:
     post:
       tags:
-      - "pet"
-      summary: "Updates a pet in the store with form data"
+      - "customer"
+      summary: "Send Request To Get Password"
       description: ""
-      operationId: "updatePetWithForm"
+      operationId: "SendMailForgotPassword"
       consumes:
-      - "application/x-www-form-urlencoded"
+      - "application/json"
+      - "application/xml"
       produces:
       - "application/xml"
       - "application/json"
       parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet that needs to be updated"
+      - in: "body"
+        name: "mail"
+        description: "Customer Send Mail To Get Password"
         required: true
-        type: "integer"
-        format: "int64"
-      - name: "name"
-        in: "formData"
-        description: "Updated name of the pet"
-        required: false
-        type: "string"
-      - name: "status"
-        in: "formData"
-        description: "Updated status of the pet"
-        required: false
-        type: "string"
+        schema:
+          type: "object"
+          properties:
+            email:
+              type: "string"
+              example: "manapro0123@gmail.com"
+      responses:
+        "405":
+          description: "Invalid input"      
+  /customer/changeForgotPassword:
+    patch:
+      tags:
+      - "customer"
+      summary: "Change Password"
+      description: ""
+      operationId: "changePassword"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "info"
+        description: "Customer changes their password"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            token:
+              type: "string"
+              example: "Token in email which has been sent by system before..."
+            newPassword:
+              type: "string"
+              example: "New Password"
+      responses:
+        "405":
+          description: "Invalid input"      
+  /customer/order:
+    post:
+      tags:
+      - "customer"
+      summary: "Customer Creates Order"
+      description: ""
+      operationId: "customerCreateOrder"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "orderInfo"
+        description: "Order Informations"
+        required: true
+        schema:
+          $ref: "#/definitions/OrderInfo"
       responses:
         "405":
           description: "Invalid input"
       security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-    delete:
+      - customerToken: []
+    get:
       tags:
-      - "pet"
-      summary: "Deletes a pet"
+      - "customer"
+      summary: "Customer Gets Order"
       description: ""
-      operationId: "deletePet"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - name: "api_key"
-        in: "header"
-        required: false
-        type: "string"
-      - name: "petId"
-        in: "path"
-        description: "Pet id to delete"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        "400":
-          description: "Invalid ID supplied"
-        "404":
-          description: "Pet not found"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet/{petId}/uploadImage:
-    post:
-      tags:
-      - "pet"
-      summary: "uploads an image"
-      description: ""
-      operationId: "uploadFile"
+      operationId: "customerGetOrder"
       consumes:
-      - "multipart/form-data"
+      - "application/json"
+      - "application/xml"
       produces:
+      - "application/xml"
       - "application/json"
       parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet to update"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "additionalMetadata"
-        in: "formData"
-        description: "Additional data to pass to server"
-        required: false
-        type: "string"
-      - name: "file"
-        in: "formData"
-        description: "file to upload"
-        required: false
-        type: "file"
+      - in: "query"
+        name: "status"
+        enum: *STATUSES
+        description: "Status of orders which you want to get"
       responses:
-        "200":
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/ApiResponse"
+        "405":
+          description: "Invalid input"
       security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /store/inventory:
-    get:
-      tags:
-      - "store"
-      summary: "Returns pet inventories by status"
-      description: "Returns a map of status codes to quantities"
-      operationId: "getInventory"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        "200":
-          description: "successful operation"
-          schema:
-            type: "object"
-            additionalProperties:
-              type: "integer"
-              format: "int32"
-      security:
-      - api_key: []
-  /store/order:
-    post:
-      tags:
-      - "store"
-      summary: "Place an order for a pet"
-      description: ""
-      operationId: "placeOrder"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "order placed for purchasing the pet"
-        required: true
-        schema:
-          $ref: "#/definitions/Order"
-      responses:
-        "200":
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Order"
-        "400":
-          description: "Invalid Order"
-  /store/order/{orderId}:
-    get:
-      tags:
-      - "store"
-      summary: "Find purchase order by ID"
-      description: "For valid response try integer IDs with value >= 1 and <= 10.         Other values will generated exceptions"
-      operationId: "getOrderById"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - name: "orderId"
-        in: "path"
-        description: "ID of pet that needs to be fetched"
-        required: true
-        type: "integer"
-        maximum: 10.0
-        minimum: 1.0
-        format: "int64"
-      responses:
-        "200":
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Order"
-        "400":
-          description: "Invalid ID supplied"
-        "404":
-          description: "Order not found"
-    delete:
-      tags:
-      - "store"
-      summary: "Delete purchase order by ID"
-      description: "For valid response try integer IDs with positive integer value.         Negative or non-integer values will generate API errors"
-      operationId: "deleteOrder"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - name: "orderId"
-        in: "path"
-        description: "ID of the order that needs to be deleted"
-        required: true
-        type: "integer"
-        minimum: 1.0
-        format: "int64"
-      responses:
-        "400":
-          description: "Invalid ID supplied"
-        "404":
-          description: "Order not found"
-  /user:
-    post:
-      tags:
-      - "user"
-      summary: "Create user"
-      description: "This can only be done by the logged in user."
-      operationId: "createUser"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Created user object"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/createWithArray:
-    post:
-      tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithArrayInput"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
-        required: true
-        schema:
-          type: "array"
-          items:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/createWithList:
-    post:
-      tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithListInput"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
-        required: true
-        schema:
-          type: "array"
-          items:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/login:
-    get:
-      tags:
-      - "user"
-      summary: "Logs user into the system"
-      description: ""
-      operationId: "loginUser"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - name: "username"
-        in: "query"
-        description: "The user name for login"
-        required: true
-        type: "string"
-      - name: "password"
-        in: "query"
-        description: "The password for login in clear text"
-        required: true
-        type: "string"
-      responses:
-        "200":
-          description: "successful operation"
-          schema:
-            type: "string"
-          headers:
-            X-Rate-Limit:
-              type: "integer"
-              format: "int32"
-              description: "calls per hour allowed by the user"
-            X-Expires-After:
-              type: "string"
-              format: "date-time"
-              description: "date in UTC when token expires"
-        "400":
-          description: "Invalid username/password supplied"
-  /user/logout:
-    get:
-      tags:
-      - "user"
-      summary: "Logs out current logged in user session"
-      description: ""
-      operationId: "logoutUser"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters: []
-      responses:
-        default:
-          description: "successful operation"
-  /user/{username}:
-    get:
-      tags:
-      - "user"
-      summary: "Get user by user name"
-      description: ""
-      operationId: "getUserByName"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be fetched. Use user1 for testing. "
-        required: true
-        type: "string"
-      responses:
-        "200":
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/User"
-        "400":
-          description: "Invalid username supplied"
-        "404":
-          description: "User not found"
+      - customerToken: []
     put:
       tags:
-      - "user"
-      summary: "Updated user"
-      description: "This can only be done by the logged in user."
-      operationId: "updateUser"
+      - "customer"
+      summary: "Customer Updates Order"
+      description: ""
+      operationId: "customerUpdateOrder"
+      consumes:
+      - "application/json"
+      - "application/xml"
       produces:
       - "application/xml"
       - "application/json"
       parameters:
-      - name: "username"
-        in: "path"
-        description: "name that need to be updated"
-        required: true
-        type: "string"
       - in: "body"
-        name: "body"
-        description: "Updated user object"
+        name: "UpdatedInfo"
+        description: "Informations Updated"
         required: true
         schema:
-          $ref: "#/definitions/User"
+          $ref: "#/definitions/UpdatedInfo"
       responses:
-        "400":
-          description: "Invalid user supplied"
-        "404":
-          description: "User not found"
-    delete:
+        "405":
+          description: "Invalid input"
+      security:
+      - customerToken: []   
+    patch:
       tags:
-      - "user"
-      summary: "Delete user"
-      description: "This can only be done by the logged in user."
-      operationId: "deleteUser"
+      - "customer"
+      summary: "Customer Confirms Order"
+      description: ""
+      operationId: "customerConfirmOrder"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      responses:
+        "405":
+          description: "Invalid input"
+      security:
+      - customerToken: [] 
+  /customer/order/products:
+    post:
+      tags:
+      - "customer"
+      summary: "Customer Adds Product"
+      description: ""
+      operationId: "customerAddProduct"
+      consumes:
+      - "application/json"
+      - "application/xml"
       produces:
       - "application/xml"
       - "application/json"
       parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be deleted"
+      - in: "body"
+        name: "productAdded"
+        description: "Product Added"
         required: true
-        type: "string"
+        schema:
+          $ref: "#/definitions/ProductsAdded"
       responses:
-        "400":
-          description: "Invalid username supplied"
-        "404":
-          description: "User not found"
+        "405":
+          description: "Invalid input"
+      security:
+      - customerToken: []
+    delete:
+      tags:
+      - "customer"
+      summary: "Customer Deletes Product"
+      description: ""
+      operationId: "customerDeleteProduct"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "productDeleted"
+        description: "Product Deleted"
+        required: true
+        schema:
+          $ref: "#/definitions/ProductsDeleted"
+      responses:
+        "405":
+          description: "Invalid input"
+      security:
+      - customerToken: []
+  /search:
+    get:
+      tags:
+      - "product"
+      summary: "Search Products By Keyword"
+      description: ""
+      operationId: "SearchProducts"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "keyword"
+        description: "Snapdragon"
+      responses:
+        "405":
+          description: "Invalid input"
 securityDefinitions:
   adminToken:
     type: apiKey

@@ -113,14 +113,14 @@ const search = (data) => {
       "as": "configuration"
     }}, 
     {$match : {$or:[
-      {name: {'$regex' :`${data.body.keyword}`,'$options' : 'i'}},
-      {brand: {'$regex' :`${data.body.keyword}`,'$options' : 'i'}},
-      {discount: {'$regex' :`${data.body.keyword}`,'$options' : 'i'}},
-      {'configuration.body.dimensions': {'$regex' :`${data.body.keyword}`,'$options' : 'i'}},
-      {'configuration.flatform.chipset': {'$regex' :`${data.body.keyword}`,'$options' : 'i'}},
-      {'configuration.display.type': {'$regex' :`${data.body.keyword}`,'$options' : 'i'}},
-      {'configuration.display.size': {'$regex' :`${data.body.keyword}`,'$options' : 'i'}},
-      {description: {'$regex' :`${data.body.keyword}`,'$options' : 'i'}},
+      {name: {'$regex' :`${data.query.keyword}`,'$options' : 'i'}},
+      {brand: {'$regex' :`${data.query.keyword}`,'$options' : 'i'}},
+      {discount: {'$regex' :`${data.query.keyword}`,'$options' : 'i'}},
+      {'configuration.body.dimensions': {'$regex' :`${data.query.keyword}`,'$options' : 'i'}},
+      {'configuration.flatform.chipset': {'$regex' :`${data.query.keyword}`,'$options' : 'i'}},
+      {'configuration.display.type': {'$regex' :`${data.query.keyword}`,'$options' : 'i'}},
+      {'configuration.display.size': {'$regex' :`${data.query.keyword}`,'$options' : 'i'}},
+      {description: {'$regex' :`${data.query.keyword}`,'$options' : 'i'}},
     ]}},
     {
       $sort : {createdAt: -1}

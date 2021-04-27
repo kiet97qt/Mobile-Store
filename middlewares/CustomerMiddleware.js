@@ -49,11 +49,11 @@ async function createOrder(req,res) {
 } 
 
 async function getOrder(req,res) {
-    let orders = await MidOrder.getOrder(req.user_id,req.body.status);
+    let orders = await MidOrder.getOrder(req.user_id,req.query.status);
     if(Array.isArray(orders) && orders.length){
         return orders
     } 
-    switch(req.body.status){
+    switch(parseInt(req.query.status)){
         case 1:
             return "Basket isn't exist!";
         case 2:
@@ -80,8 +80,8 @@ async function updateBasket(req,res) {
     } 
     req.body.products = MidOrder.checkQuantityProduct(req.body.products)
     await orders.findOneAndUpdate({userID: req.user_id, status: 1},req.body,{new:true });
-    return await MidOrder.countTotalAmount(req.user_id);
-}
+    let totalAmount = await MidOrder.countTotalAmount(req.user_id);
+    return await orders.findOneAndUpdate({userID: req.user_id, status: 1},{totalAmount: totalAmount[0].totalAmount},{new:true });}
 
 async function orderComfirmedByCustomer(req,res) {
     let order = await MidOrder.getBasket(req.user_id);
@@ -89,7 +89,7 @@ async function orderComfirmedByCustomer(req,res) {
         return Promise.reject("Basket isn't exist!!");
     } 
     let history = await orders.findOne({userID: req.user_id, status: 1},{ history: 0}).populate("products.productID")
-    return await orders.findOneAndUpdate({userID: req.user_id, status: 1},{history:history, status: req.body.status},{new:true });
+    return await orders.findOneAndUpdate({userID: req.user_id, status: 1},{history:history, status:2},{new:true });
 }
 
 async function deleteProducts(req,res) {
@@ -97,10 +97,12 @@ async function deleteProducts(req,res) {
     if(!order){
         return Promise.reject("Basket isn't exist!!");
     } 
-    return await orders.update(
+    await orders.update(
         {userID: req.user_id, status: 1 },
         { $pull: { 'products': { _id: req.body._id } } }
       );
+    let totalAmount = await MidOrder.countTotalAmount(req.user_id);
+    return await orders.findOneAndUpdate({userID: req.user_id, status: 1},{totalAmount: totalAmount[0].totalAmount},{new:true });
 }
 
 module.exports = { 
