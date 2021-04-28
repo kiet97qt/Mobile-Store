@@ -31,7 +31,6 @@ const create = (data) => {
         display: {type: configuration.display.type, size: configuration.display.size},
         flatform: [
                     {os: configuration.flatform[0].os,chipset: configuration.flatform[0].chipset},
-                    {os: configuration.flatform[1].os,chipset: configuration.flatform[1].chipset},
                   ],
         sound: configuration.sound
       });
@@ -128,6 +127,17 @@ const search = (data) => {
   ])
 };
 
+async function checkProductExist(req,res,next){
+  var productExist = [];
+  for(let idx=0; idx < req.body.products.length; idx ++){
+    const data = await getProductByID(req.body.products[idx].productID)
+    if(data){
+      productExist.push(req.body.products[idx]);
+    }
+  }
+  req.body.products = productExist;
+  next()
+}
 module.exports = {
   create,
   modify,
@@ -135,4 +145,6 @@ module.exports = {
   forceDestroy,
   restore,
   search,
+  getProductByID,
+  checkProductExist,
 };

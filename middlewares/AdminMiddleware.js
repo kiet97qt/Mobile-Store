@@ -29,6 +29,10 @@ function sendMailForgotPassword(req,res){
       .catch((err) => res.json("Email is not Exist: ",err))
 }
 async function orderComfirmedByAdmin(req,res) {
+  const order = await MidOrder.findOrderById(req.body._id);
+  if(order.status !== 2) {
+    return Promise.reject("Order unavailable!!");
+  }
   return await MidOrder.findOrderAndUpdate(req.body._id,3);
 }
 

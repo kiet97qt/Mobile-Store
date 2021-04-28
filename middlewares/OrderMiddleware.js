@@ -57,6 +57,7 @@ const checkQuantityProduct = (products)=> {
         return product.quantity > 0;
     });
 }
+const findOrderById = (id) => orders.findById(id);
 
 const create = (newOrder) => orders.create(newOrder);
 
@@ -70,4 +71,5 @@ module.exports = {
     checkQuantityProduct,
     findOrderAndUpdate,
     getOrderByConditions,
+    findOrderById,
 };

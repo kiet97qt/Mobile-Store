@@ -3,6 +3,8 @@ const AuthController = require("../controllers/AuthController");
 const CustomerController = require("../controllers/CustomerController");
 const AdminController = require("../controllers/AdminController");
 
+const MidProduct = require("../middlewares/ProductMiddleware");
+
 const { isCustomerAuth } = require("../utils/authen");
 const { checkAuthen,testCode } = require("../utils/hash");
 
@@ -20,7 +22,7 @@ router.post("/order",isCustomerAuth, CustomerController.createOrder);
 
 router.get("/order",isCustomerAuth, CustomerController.getOrder);
 
-router.post("/order/products",isCustomerAuth, CustomerController.addProducts);
+router.post("/order/products",isCustomerAuth,MidProduct.checkProductExist, CustomerController.addProducts);
 
 router.put("/order",isCustomerAuth, CustomerController.updateBasket);
 

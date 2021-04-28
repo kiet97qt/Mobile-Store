@@ -66,8 +66,8 @@ async function addProducts(req,res) {
     let order = await MidOrder.getBasket(req.user_id);
     if(!order){
         return Promise.reject("Basket isn't exist!!");
-    } 
-    let productsAdded = MidOrder.checkQuantityProduct(req.body.products)
+    }
+    let productsAdded = await MidOrder.checkQuantityProduct(req.body.products)
     await orders.findOneAndUpdate({userID: req.user_id, status: 1},{$push:{"products" : productsAdded}},{new:true });
     let totalAmount = await MidOrder.countTotalAmount(req.user_id);
      return await orders.findOneAndUpdate({userID: req.user_id, status: 1},{totalAmount: totalAmount[0].totalAmount},{new:true });
