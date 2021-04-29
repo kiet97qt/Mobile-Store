@@ -129,15 +129,23 @@ const search = (data) => {
 
 async function checkProductExist(req,res,next){
   var productExist = [];
-  for(let idx=0; idx < req.body.products.length; idx ++){
-    const data = await getProductByID(req.body.products[idx].productID)
-    if(data){
-      productExist.push(req.body.products[idx]);
-    }
-  }
+  const productsArrayPromise = await req.body.products.map((product) => {
+    return getProductByID(product.productID)
+  })
+  await Promise.all(productsArrayPromise).then((datas) => {
+    datas.filter((data)=>{
+        if(data){
+          const productAdded = req.body.products.find((product)=>{
+            return product.productID == data._id
+          })
+         productExist.push(productAdded)
+        }
+    })
+  })
   req.body.products = productExist;
   next()
 }
+
 module.exports = {
   create,
   modify,
