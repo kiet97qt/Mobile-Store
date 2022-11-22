@@ -45,12 +45,6 @@ async function register(data) {
 }
 // admin
 const loginAdmin = ({ email, password }) => {
-  // const newAdmin = {
-  //   email,
-  //   password: bcrypt.hashSync(password, 10),
-  // };
-  // return adminModel.create(newAdmin);
-
   return MidAdmin.getAdminByEmail(email)
     .then((admin) => {
       if (!admin) {
