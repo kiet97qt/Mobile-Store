@@ -1,5 +1,11 @@
 const MidCustomer = require('../middlewares/CustomerMiddleware');
 
+//new
+exports.registerCustomer = async function (req, res) {
+  return;
+};
+//---
+
 const getProfile = (req, res) => {
   MidCustomer.getProfile(req.user_id)
     .then((data) => res.json({ data }))

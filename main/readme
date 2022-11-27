@@ -1,0 +1,3 @@
+docker command:
+    down: docker-compose down --volumes
+    up: docker-compose up

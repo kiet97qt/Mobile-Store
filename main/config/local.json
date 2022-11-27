@@ -1,0 +1,15 @@
+{
+  "database": {
+    "connectionString": "mongodb://kane.le.97:xX12345Xx@localhost:27017/mobileStore",
+    "connectionOptions": {
+      "useNewUrlParser": true,
+      "useUnifiedTopology": true,
+      "maxPoolSize": 15
+    },
+    "maxPoolSize": 15,
+    "connectTimeoutMS": 15000,
+    "mongoInitdbUsername": "kane.le.97",
+    "mongoInitdbPassword": "xX12345Xx",
+    "mongoInitdbDatabase": "mobileStore"
+  }
+}

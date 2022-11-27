@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "NODE_ENV=local nodemon app.js"
   },
   "author": "kiet",
   "license": "ISC",
@@ -15,6 +15,7 @@
     "debug": "^4.3.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "gridfs-stream": "^1.1.1",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "4.12.0",
     "mongoose": "6.7.2",
@@ -22,6 +23,7 @@
     "node-constants": "0.0.2",
     "nodemailer": "^6.5.0",
     "nodemon": "^2.0.7",
+    "ordered-uuid": "^1.1.0",
     "swagger-tools": "^0.10.4",
     "swagger-ui-express": "^4.1.6",
     "winston": "^3.8.2",

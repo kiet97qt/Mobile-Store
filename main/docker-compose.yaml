@@ -3,6 +3,8 @@ version: '3.1'
 services:
   mongo:
     image: mongo
+    env_file:
+      - .env.local
     restart: always
     ports:
       - 27017:27017
@@ -10,18 +12,10 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: mobileStore
     volumes:
       - mongo-data:/data/db
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - 8081:8081
-    container_name: mongo-express
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
-      ME_CONFIG_MONGODB_ADMINPASSWORD: password
-      ME_CONFIG_MONGODB_URL: mongodb://admin:password@mongo:27017/
+      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
 volumes:
   mongo-data:
     driver: local

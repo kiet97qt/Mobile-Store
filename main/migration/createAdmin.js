@@ -1,17 +1,23 @@
 require('../connections/mongodb');
 const mongoose = require('mongoose');
-const adminModel = require('../models/core/admin');
+const { User } = require('../models/User');
 const bcrypt = require('bcrypt');
 
 (async () => {
   try {
-    const email = 'admin@gmail.com';
+    const email = 'kiet.le.admin@gmail.com';
     const password = 'admin';
     const newAdmin = {
       email,
       password: bcrypt.hashSync(password, 10),
+      persona: 'admin',
+      firstName: 'kiet',
+      lastNameL: 'le',
+      preferredLanguage: 'en-US',
+      createdBy: 'system',
+      creationDate: new Date(),
     };
-    await adminModel.create(newAdmin);
+    await User.create(newAdmin);
   } catch (err) {
     console.log(`Error creating admin: ${err.message}, Stack: ${err.stack}`);
   } finally {

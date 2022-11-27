@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const AuthController = require('../controllers/AuthController');
-const CustomerController = require('../controllers/CustomerController');
+const customerController = require('../controllers/customerController');
 const AdminController = require('../controllers/AdminController');
 
 const MidProduct = require('../middlewares/ProductMiddleware');
@@ -8,27 +8,32 @@ const MidProduct = require('../middlewares/ProductMiddleware');
 const { isCustomerAuth } = require('../utils/authen');
 const { checkAuthen, testCode } = require('../utils/hash');
 
+// new
+//router.post('/register', customerController.registerCustomer);
+
+//
+
 router.post('/login', AuthController.login);
 
-router.post('/register', AuthController.register);
+//router.post('/register', AuthController.register);
 
-router.get('/profile', isCustomerAuth, CustomerController.getProfile);
+router.get('/profile', isCustomerAuth, customerController.getProfile);
 
 router.post('/forgotPassword', AdminController.sendMailForgotPassword);
 
-router.patch('/changeForgotPassword', CustomerController.changeForgotPassword);
+router.patch('/changeForgotPassword', customerController.changeForgotPassword);
 
-router.post('/order', isCustomerAuth, CustomerController.createOrder);
+router.post('/order', isCustomerAuth, customerController.createOrder);
 
-router.get('/order', isCustomerAuth, CustomerController.getOrder);
+router.get('/order', isCustomerAuth, customerController.getOrder);
 
-router.post('/order/products', isCustomerAuth, MidProduct.checkProductExist, CustomerController.addProducts);
+router.post('/order/products', isCustomerAuth, MidProduct.checkProductExist, customerController.addProducts);
 
-router.put('/order', isCustomerAuth, CustomerController.updateBasket);
+router.put('/order', isCustomerAuth, customerController.updateBasket);
 
-router.patch('/order', isCustomerAuth, CustomerController.orderComfirmedByCustomer);
+router.patch('/order', isCustomerAuth, customerController.orderComfirmedByCustomer);
 
-router.delete('/order/products', isCustomerAuth, CustomerController.deleteProducts);
+router.delete('/order/products', isCustomerAuth, customerController.deleteProducts);
 
 router.post('/testCode', testCode);
 
