@@ -15,4 +15,19 @@ module.exports = {
     status: 'ERROR',
     message: 'Forbidden request. Cannot find the resource',
   },
+  E400_NOTFOUNDUSER: {
+    code: 'E400_NOTFOUNDUSER',
+    status: 'ERROR',
+    message: 'Not found user',
+  },
+  E401_INVALIDPASSWORD: {
+    code: 'E401_INVALIDPASSWORD',
+    status: 'ERROR',
+    message: 'Invalid Password',
+  },
+  S200_LOGINSUCCESS: {
+    code: 'S200_LOGINSUCCESS',
+    status: 'SUCCESS',
+    message: 'Login Successfully',
+  },
 };

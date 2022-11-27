@@ -1,11 +1,16 @@
-const MidAdmin = require('../middlewares/AdminMiddleware');
+const loginService = require('../services/loginService');
 
-const loginUser = (req, res) => {
-  MidAdmin.loginUser(req, res)
-    .then((data) => res.json({ data }))
-    .catch((err) => res.json({ err }));
-};
+const Logger = require('../utils/logger');
+const logger = new Logger('loginController');
 
-module.exports = {
-  loginUser,
+exports.loginUser = async (req, res) => {
+  try {
+    const loginResult = await loginService.loginUser(req.body);
+    if (loginResult.status > 200) {
+      return res.status(loginResult.status).send(loginResult.message);
+    }
+    return res.status(200).send(loginResult.data);
+  } catch (error) {
+    logger.error(`Error loginUser() message: ${error.message}, stack: ${error.stack}`);
+  }
 };
