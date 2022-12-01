@@ -15,7 +15,13 @@ const updateUserInfo = (query, updatedInfo) => {
   });
 };
 
+const createUser = async (userDTO) => {
+  logger.info(`createUser with query: ${JSON.stringify(userDTO)}`);
+  return await mongoUtil.insertOne(collections.users, userDTO);
+};
+
 module.exports = {
   getUser,
   updateUserInfo,
+  createUser,
 };

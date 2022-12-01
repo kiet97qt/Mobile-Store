@@ -4,12 +4,13 @@ const customerController = require('../controllers/customerController');
 const AdminController = require('../controllers/AdminController');
 
 const MidProduct = require('../middlewares/ProductMiddleware');
+const customerMiddleware = require('../middlewares/customerMiddleware');
 
 const { isCustomerAuth } = require('../utils/authen');
 const { checkAuthen, testCode } = require('../utils/hash');
 
 // new
-//router.post('/register', customerController.registerCustomer);
+router.post('/register', customerMiddleware.registerUserValidation, customerController.registerCustomer);
 
 //
 

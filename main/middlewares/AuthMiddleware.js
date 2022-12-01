@@ -1,5 +1,5 @@
 const adminModel = require('../models/core/admin');
-const MidCustomer = require('./CustomerMiddleware');
+const MidCustomer = require('./customerMiddleware');
 const MidAdmin = require('./AdminMiddleware');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');

@@ -1,6 +1,6 @@
 const { decodeToken, encodeToken } = require('./hash');
 const MidAdmin = require('../middlewares/AdminMiddleware');
-const MidUser = require('../middlewares/CustomerMiddleware');
+const MidUser = require('../middlewares/customerMiddleware');
 
 const isAdminAuth = (req, res, next) =>
   decodeToken(req, res).then((data) =>

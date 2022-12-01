@@ -4,7 +4,7 @@ const { User } = require('../models/User');
 const Logger = require('../utils/logger');
 const logger = new Logger('createAdmin');
 const bcrypt = require('bcrypt');
-
+const OrderedUUID = require('ordered-uuid');
 (async () => {
   try {
     const email = 'kiet.le.admin@gmail.com';
@@ -14,6 +14,7 @@ const bcrypt = require('bcrypt');
       throw new Error('User has already existed');
     }
     const newAdmin = {
+      _id: OrderedUUID.generate(),
       email,
       password: bcrypt.hashSync(password, 10),
       persona: 'admin',

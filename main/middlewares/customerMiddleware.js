@@ -8,6 +8,13 @@ const MidOrder = require('./OrderMiddleware');
 const getUserByEmail = (email) => users.findOne({ email });
 const create = (data) => users.create(data);
 const getProfile = (user_id) => users.findById(user_id);
+const { userValidation } = require('../validators/schemas/userValidator');
+const Logger = require('../utils/logger');
+const logger = new Logger('customerMiddleware');
+const responseMessageConfig = require('../config/responseMessageConfig');
+const userService = require('../services/userService');
+const commons = require('../utils/commons');
+
 function changeForgotPassword(req, res) {
   return decodeTokenForgotPassWord(req, res)
     .then((data) => {
@@ -130,6 +137,38 @@ async function deleteProducts(req, res) {
   );
 }
 
+const registerUserValidation = async (req, res, next) => {
+  try {
+    if (!req.body.email) {
+      logger.error(`registerUserValidation(): Email not entered`);
+      return res.status(400).send(responseMessageConfig.E400_INVALIDUSEREMAIL);
+    }
+
+    const user = await userService.getUser({ email: req.body.email });
+
+    if (user) {
+      logger.error(`registerUserValidation(): user already existed`);
+      return res.status(409).send(responseMessageConfig.E409_DUPUSEREMAIL);
+    }
+
+    let errorMessage, errorObj;
+    let isRequestValid = userValidation(req.body);
+    if (!isRequestValid) {
+      errorMessage = commons.extractAjvErrors(userValidation.errors);
+      errorObj = commons.generateErrorObject(errorMessage, 400, 'INVALIDPRO400E');
+      return res.status(400).send(errorObj);
+    }
+    next();
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+      error.code = 'INTLSERVER500E';
+    }
+    logger.error(`Error in registerUserValidation, Message: ${error.message}, Stack: ${error.stack}`);
+    return res.status(500).send(error);
+  }
+};
+
 module.exports = {
   create,
   getUserByEmail,
@@ -141,6 +180,7 @@ module.exports = {
   updateBasket,
   orderComfirmedByCustomer,
   deleteProducts,
+  registerUserValidation,
 };
 
 // return users.aggregate([

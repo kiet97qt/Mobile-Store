@@ -2,7 +2,7 @@ const adminModel = require('../models/core/admin');
 const getAdminByEmail = (email) => adminModel.findOne({ email });
 const getDetail = (_id) => adminModel.findById(_id);
 const { sendMailFromAdmin } = require('../utils/commons');
-const MidCustomer = require('../middlewares/CustomerMiddleware');
+const MidCustomer = require('./customerMiddleware');
 const { encodeToken, decodeToken } = require('../utils/hash');
 const MidOrder = require('./OrderMiddleware');
 
